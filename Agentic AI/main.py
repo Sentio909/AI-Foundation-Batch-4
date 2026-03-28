@@ -1,6 +1,9 @@
 import streamlit as st
 
 from datetime import datetime
+from chat_agent import chat_with_agent, chat_with_bank_agent
+
+
 
 messages = st.session_state.get("messages", [])
 
@@ -18,11 +21,12 @@ def get_greeting():
 
 st.title("Hello There! 👋")
 
-name = st.text_input("What's your name?")
-if name:
+account_number = st.text_input("What's account number??")
+if account_number:
     user_message = st.chat_input("Type your message here...")
     if user_message:
-        message = get_greeting() + " " + name 
+        previous_messages = st.session_state["messages"]
+        message = chat_with_bank_agent(user_message , previous_messages , account_number)
         st.session_state["messages"] = messages + [{"role": "user", "content": user_message}, {"role": "assistant", "content": message}]
 
 for message in st.session_state["messages"]:
